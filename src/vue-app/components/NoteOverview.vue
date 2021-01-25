@@ -53,10 +53,9 @@ const FUSE_OPTIONS = {
 				deep: true,
 			},
 			searchResults: {
-				handler: debounce(function() {
-					// const activeNote = newNotes.findIndex((note) => note.id === this.$store.state.activeNote);
-					// if (activeNote === -1) this.switchToNote(0);
-					this.switchToNote(0);
+				handler: debounce(function(newNotes) {
+					const activeNote = newNotes.findIndex((note) => note.id === this.$store.state.activeNote);
+					if (activeNote === -1) this.switchToNote(0);
 				}, 50),
 			}
 		},

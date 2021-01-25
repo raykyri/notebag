@@ -135,8 +135,8 @@
 			};
 		},
 		methods: {
-			setNoteTitle: debounce(setNoteTitle, 400),
-			updateNote: asyncDebounce(updateNote, 400),
+			setNoteTitle: debounce(setNoteTitle, 250),
+			updateNote: asyncDebounce(updateNote, 250),
 			reloadEditor() {
 				this.editor.destroy();
 				this.editor = makeEditor(this.activeNote, this.updateNote, NoteSuggestions(this));
@@ -405,7 +405,7 @@
 		}
 
 		&__content p.is-empty:only-child::before {
-			content: "Your next big idea …";
+			content: "Start a note here";
 			float: left;
 			color: var(--placeholder);
 			pointer-events: none;
@@ -417,8 +417,11 @@
 		}
 
 		&__content p {
-			margin-block-start: 0.6em;
-			margin-block-end: 0.6em;
+			margin: 0.4em 0;
+		}
+		&__content ul,
+		&__content ol {
+			margin: 0.4em 0;
 		}
 
 		&__content h1,

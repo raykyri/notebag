@@ -25,7 +25,6 @@
 	"build": {
 		"artifactName": "notebag-${channel}.${ext}",
 		"appId": "com.pretzelhands.notebag",
-		"DISABLED_afterSign": "scripts/notarize.js",
 		"directories": {
 			"buildResources": "src/electron-app/assets/",
 			"output": "out/"

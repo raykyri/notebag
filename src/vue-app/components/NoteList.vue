@@ -153,6 +153,7 @@
 
 <style lang="scss">
 	.note-list-elastic-wrapper {
+		max-width: 100%;
 		width: 100%;
                 max-height: 14.2rem;
                 overflow-y: scroll;
@@ -178,6 +179,7 @@
 			.note__meta {
 				flex: 1;
 				flex-grow: 0;
+				flex-shrink: 1;
 			}
 			.note__body {
 				flex-grow: 1;
@@ -190,7 +192,6 @@
 			margin: 0;
 			margin-right: 0.5rem;
 			font-weight: 700;
-			max-width: 75%;
 			letter-spacing: .1px;
 			white-space: nowrap;
 			overflow: hidden;
@@ -243,7 +244,6 @@
 			outline: none;
 		}
 
-		&:hover,
 		&.is-active,
 		&:active {
 			outline: none;
@@ -255,6 +255,9 @@
 				visibility: visible;
 				transition: visibility 0s ease-in 0s, opacity 0ms;
 			}
+		}
+		&:hover {
+			background-color: var(--note-background--hover-light);
 		}
 
 		&--rtl {

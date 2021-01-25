@@ -65,6 +65,7 @@
 		--note-background--inactive: var(--muted);
 		--note-background--active: var(--primary);
 		--note-background--hover: var(--muted--intense);
+		--note-background--hover-light: #e7e7e8;
 
 		--note-text--active: var(--primary--inverse);
 		--note-text--inactive: #555555;
