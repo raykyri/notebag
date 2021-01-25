@@ -38,6 +38,7 @@
 		"entitlementsInherit": "build/entitlements.mac.plist"
 	},
 	"dependencies": {
+		"elastic-scroll-polyfill": "^2.1.0",
 		"electron-localshortcut": "^3.2.1",
 		"electron-store": "^5.1.1",
 		"escape-string-regexp": "^4.0.0",

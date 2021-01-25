@@ -40,6 +40,7 @@
 	const ALLOWED_HTML_TAGS = [];
 
 	import stripTags from "striptags";
+	import elasticScroll from "elastic-scroll-polyfill";
 
 	import Actions from "@/store/actions";
 
@@ -59,6 +60,12 @@
 
 				return this.project;
 			}
+		},
+		mounted() {
+			setTimeout(() => {
+				let noteOverview = document.querySelector(".note-list");
+				elasticScroll({ targets: noteOverview, intensity: 1 });
+			}, 0);
 		},
 		methods: {
 			setActiveNote(id) {
@@ -153,7 +160,7 @@
 
 <style lang="scss">
 	.note-list {
-                max-height: 14.1rem;
+                max-height: 14.2rem;
                 overflow-y: scroll;
 	}
 	.note {

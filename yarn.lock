@@ -2276,6 +2276,11 @@ ejs@^3.1.5:
   dependencies:
     jake "^10.6.1"
 
+elastic-scroll-polyfill@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/elastic-scroll-polyfill/-/elastic-scroll-polyfill-2.1.0.tgz#9b1c320ffca30b3f447f93f3e48165c8f39f2df5"
+  integrity sha512-r4nw62S4volCAuY9yNEv4PqrfJzzUTJ3Inr4/lMaFnradV4X5vCyqxhgYUiRMybJdStNMQFpqLzBy52j5lrCow==
+
 electron-builder@^22.3.2:
   version "22.9.1"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-22.9.1.tgz#a2962db6f2757bc01d02489f38fafe0809f68f60"

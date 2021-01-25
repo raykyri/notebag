@@ -95,6 +95,7 @@
 	import stripTags from "striptags";
 
 	import { NoteSuggestions, CategorySuggestions } from "@/plugins/NotebagSuggestions";
+	import elasticScroll from "elastic-scroll-polyfill";
 
 	import EventBus, {Events} from "@/EventBus";
 	import Actions from "@/store/actions";
@@ -296,6 +297,9 @@
 			this.editor = makeEditor(this.activeNote, this.updateNote, NoteSuggestions(this), CategorySuggestions(this));
 
 			setTimeout(() => {
+				let editingContainer = document.querySelector(".editing-container");
+				elasticScroll({ targets: editingContainer, intensity: 1 });
+
 				let proseMirror = document.querySelector(".ProseMirror");
 				proseMirror.addEventListener("copy", convertClipboardToMarkdown);
 
