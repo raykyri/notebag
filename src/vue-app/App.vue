@@ -53,7 +53,7 @@
 		--text--muted: #a9a9a9;
 		--text--dark: #888888;
 
-		--placeholder: var(--text--dark);
+		--placeholder: var(--text--muted);
 
 		--todo: var(--primary);
 		--todo-checkmark: var(--primary--inverse);

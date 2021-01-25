@@ -7,7 +7,6 @@ const Shortcuts = {
 	GO_UP_NOTE: "goUpOneNote",
 	GO_DOWN_NOTE: "goDownOneNote",
 	COMPLETE_TODO: "completeTodo",
-	TOGGLE_OMNIBAR: "toggleOmnibar",
 	TOGGLE_THEME: "toggleTheme",
 	TAB_SWITCH_MODIFIER: "tabSwitchModifier",
 };

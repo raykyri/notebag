@@ -85,13 +85,6 @@
 					</tr>
 
 					<tr>
-						<td>Toggle omnibar</td>
-						<td class="shortcuts-table__shortcut">
-							<key-capture :shortcut="Shortcuts.TOGGLE_OMNIBAR" @captured="setShortcut" />
-						</td>
-					</tr>
-
-					<tr>
 						<td>Create new note</td>
 						<td class="shortcuts-table__shortcut">
 							<key-capture :shortcut="Shortcuts.NEW_NOTE" @captured="setShortcut" />

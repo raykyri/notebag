@@ -153,7 +153,7 @@
 
 <style lang="scss">
 	.note-list {
-                max-height: 15rem;
+                max-height: 14.1rem;
                 overflow-y: scroll;
 	}
 	.note {

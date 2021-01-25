@@ -101,7 +101,7 @@
 	import Modes from "@/store/modes";
 
 	import {updateNote, setNoteTitle} from "@/utilities/notes";
-	import {setCurrentCursorPosition} from "@/utilities/text";
+	// import {setCurrentCursorPosition} from "@/utilities/text";
 	import {convertClipboardToMarkdown} from "@/utilities/clipboard";
     import {isEnterKey, isActionableKey} from "@/utilities/keycode";
 	import {makeEditor} from "@/utilities/editor";
@@ -147,7 +147,7 @@
 					}
 
 					if (stripTags(this.editor.getHTML()).length > 0 && this.activeNote.cursorPosition) {
-						setCurrentCursorPosition(this.activeNote.cursorPosition);
+						// setCurrentCursorPosition(this.activeNote.cursorPosition);
 						return;
 					}
 
@@ -160,17 +160,8 @@
 				}, 25);
 			},
 			onActiveNoteChanged(activeNote) {
-				setTimeout(() => {
-					this.editor.setContent(activeNote.body);
-					this.setEditorFocus();
-				}, 0);
-			},
-			onOmnibarHidden() {
-				if (!this.activeNote) {
-					return;
-				}
-
-				this.editor.focus();
+				this.editor.setContent(activeNote.body);
+				this.setEditorFocus();
 			},
 			refocusSelection(event) {
 				if (event.target == document.body) {
@@ -314,8 +305,6 @@
 
 
 			EventBus.$on(Events.ACTIVE_NOTE_CHANGED, this.onActiveNoteChanged);
-			EventBus.$on(Events.OMNIBAR_HIDDEN, this.onOmnibarHidden);
-
 
 			ipcRenderer.on("shortcut-changed:completeTodo", this.reloadEditor);
 			window.addEventListener("selectstart", this.refocusSelection);
@@ -330,24 +319,24 @@
 <style lang="scss">
 	.editing-area {
 		width: 100%;
-		padding: 1rem 1.2rem;
+		padding: 0.2rem 1.2rem 1rem;
 		position: relative;
 		font-size: var(--font-size);
 	}
 	.editing-container {
-		height: calc(100vh - 22rem);
+		max-height: calc(100vh - 22rem);
 		overflow-y: auto;
 	}
 
 	.editor {
 		margin: 0 auto;
-		max-width: 640px;
+		padding: 0 6px;
 		min-height: 100%;
 		width: 100%;
 
 		&__title {
 			width: 100%;
-			font-size: calc(var(--font-size) * 2);
+			font-size: calc(var(--font-size) * 1.33);
 			font-weight: bold;
 			border: none;
 			color: var(--text);
@@ -683,6 +672,10 @@
 		a {
 			color: var(--text--dark);
 		}
+	}
+
+	input::placeholder {
+		color: var(--placeholder);
 	}
 
 	input, button, .ProseMirror {
