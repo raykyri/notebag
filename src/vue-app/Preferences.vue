@@ -78,6 +78,29 @@
 					</tr>
 
 					<tr>
+						<td>Focus the search bar</td>
+						<td class="shortcuts-table__shortcut">
+							<key-capture :shortcut="Shortcuts.FOCUS_SEARCH" @captured="setShortcut" />
+						</td>
+					</tr>
+
+					<tr>
+						<td>Go up one note</td>
+						<td class="shortcuts-table__shortcut">
+							<key-capture :shortcut="Shortcuts.GO_UP_NOTE" @captured="setShortcut" />
+						</td>
+					</tr>
+
+					<tr>
+						<td>Go down one note</td>
+						<td class="shortcuts-table__shortcut">
+							<key-capture :shortcut="Shortcuts.GO_DOWN_NOTE" @captured="setShortcut" />
+						</td>
+					</tr>
+
+					<tr><td></td><td></td></tr>
+
+					<tr>
 						<td>Toggle light/dark mode</td>
 						<td class="shortcuts-table__shortcut">
 							<key-capture :shortcut="Shortcuts.TOGGLE_THEME" @captured="setShortcut" @recording="suspendShortcut" />

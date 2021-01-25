@@ -54,6 +54,7 @@ export default new Vuex.Store({
 				[Shortcuts.NEW_NOTE]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.NEW_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.NEW_NOTE]),
 				[Shortcuts.DELETE_NOTE]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.DELETE_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.DELETE_NOTE]),
 				[Shortcuts.COMPLETE_TODO]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.COMPLETE_TODO}`, defaultShortcuts[shortcutOs][Shortcuts.COMPLETE_TODO]),
+				[Shortcuts.FOCUS_SEARCH]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.FOCUS_SEARCH}`, defaultShortcuts[shortcutOs][Shortcuts.FOCUS_SEARCH]),
 				[Shortcuts.GO_UP_NOTE]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.GO_UP_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.GO_UP_NOTE]),
 				[Shortcuts.GO_DOWN_NOTE]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.GO_DOWN_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.GO_DOWN_NOTE]),
 			},

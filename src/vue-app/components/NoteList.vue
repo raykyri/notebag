@@ -1,6 +1,6 @@
 <template>
 	<div class="note-list">
-		<div class="note-list-elastic-wrapper">
+		<div class="note-list-elastic-wrapper" data-elastic-wrapper>
 			<div
 				v-for="(note, arrayIdx, objectIdx) in notes"
 				:class="noteClassName(note.id)"
@@ -65,7 +65,7 @@
 		},
 		mounted() {
 			setTimeout(() => {
-				let noteOverview = document.querySelector(".note-list-elastic-wrapper");
+				let noteOverview = document.querySelector(".note-list");
 				elasticScroll({ targets: noteOverview, intensity: 0.66 });
 			}, 0);
 		},
@@ -258,11 +258,13 @@
 			.category-pill { margin-right: .2rem; }
 		}
 
+		&:focus {
+			outline: none;
+		}
+
 		&:hover,
 		&.is-active,
-		&:active,
-		&:focus,
-		&:focus-within {
+		&:active {
 			outline: none;
 			cursor: pointer;
 			background-color: var(--note-background--hover);

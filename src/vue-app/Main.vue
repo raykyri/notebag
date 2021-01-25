@@ -1,7 +1,7 @@
 <template>
 	<div class="main layout flex">
 		<viewbar />
-		<div class="nv-layout" v-show="mode === Modes.NOTES">
+		<div ref="layout" class="nv-layout" v-show="mode === Modes.NOTES">
 			<note-overview />
 			<editor />
                 </div>
@@ -52,6 +52,15 @@
 			}
 		},
 		methods: {
+			[Shortcuts.GO_UP_NOTE]() {
+				this.$store.commit(Actions.MOVE_ONE_NOTE, Payloads.MOVE_UP);
+			},
+			[Shortcuts.GO_DOWN_NOTE]() {
+				this.$store.commit(Actions.MOVE_ONE_NOTE, Payloads.MOVE_DOWN);
+			},
+			[Shortcuts.FOCUS_SEARCH]() {
+				document.querySelector(".note-overview__search").focus();
+			},
 			[Shortcuts.NEW_NOTE]() {
 				this.$store.dispatch(Actions.ADD_NOTE);
 			},
@@ -119,10 +128,29 @@
 				true
 			);
 
+			const goUpOneNoteAccelerator = makeAccelerator(
+				electronStore.get(`preferences.shortcuts.${Shortcuts.GO_UP_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.GO_UP_NOTE]),
+				true
+			);
+
+			const goDownOneNoteAccelerator = makeAccelerator(
+				electronStore.get(`preferences.shortcuts.${Shortcuts.GO_DOWN_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.GO_DOWN_NOTE]),
+				true
+			);
+
+			const focusSearchBarAccelerator = makeAccelerator(
+				electronStore.get(`preferences.shortcuts.${Shortcuts.FOCUS_SEARCH}`, defaultShortcuts[shortcutOs][Shortcuts.FOCUS_SEARCH]),
+				true
+			);
+
 			Mousetrap.prototype.stopCallback = () => false;
 			Mousetrap.bind(newNoteAccelerator, this[Shortcuts.NEW_NOTE]);
 			Mousetrap.bind(deleteNoteAccelerator, this[Shortcuts.DELETE_NOTE]);
 			Mousetrap.bind(toggleThemeAccelerator, this[Shortcuts.TOGGLE_THEME]);
+
+			Mousetrap.bind(goUpOneNoteAccelerator, this[Shortcuts.GO_UP_NOTE]);
+			Mousetrap.bind(goDownOneNoteAccelerator, this[Shortcuts.GO_DOWN_NOTE]);
+			Mousetrap.bind(focusSearchBarAccelerator, this[Shortcuts.FOCUS_SEARCH]);
 
 			const modifier = makeAccelerator(defaultShortcuts[shortcutOs][Shortcuts.TAB_SWITCH_MODIFIER], true);
 			Mousetrap.bind(`${modifier}+1`, () => this.setMode(Modes.NOTES));
@@ -136,6 +164,11 @@
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.NEW_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.NEW_NOTE, oldKeys, newKeys));
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.DELETE_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.DELETE_NOTE, oldKeys, newKeys));
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.TOGGLE_THEME}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.TOGGLE_THEME, oldKeys, newKeys));
+
+			ipcRenderer.on(`shortcut-changed:${Shortcuts.GO_UP_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.GO_UP_NOTE, oldKeys, newKeys));
+			ipcRenderer.on(`shortcut-changed:${Shortcuts.GO_DOWN_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.GO_DOWN_NOTE, oldKeys, newKeys));
+			ipcRenderer.on(`shortcut-changed:${Shortcuts.FOCUS_SEARCH}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.FOCUS_SEARCH, oldKeys, newKeys));
+
 			ipcRenderer.on("recreate-tutorial", () => this.$store.commit(Actions.ADD_TUTORIAL_NOTE));
 			ipcRenderer.on("imported-note", this.addImportedNote);
 
