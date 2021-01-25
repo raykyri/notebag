@@ -15,7 +15,7 @@ Notebag is split into two main parts. One is the Electron app responsible for ha
 window management and OS-related things, the other is a Vue app handling the entire UI.
 
 
-### Electron 
+### Electron
 The Electron part is relatively small and the file structure is split up into the various
 components that make up the app: the main window, the preferences window, the app menu,
 the tray functionality and some helpers to deal with global keyboard shortcuts.
@@ -23,7 +23,7 @@ the tray functionality and some helpers to deal with global keyboard shortcuts.
 ### Vue
 
 The Vue app is built on `vuex` and `vue-router`. Anyone familiar with the Vue ecosystem
-should find those parts reasonably easy to understand. The main editor component is based 
+should find those parts reasonably easy to understand. The main editor component is based
 on `tiptap`, which in turn is based on ProseMirror. The various available formattings are
 stored under `plugins` and `extensions` respectively.
 
@@ -45,12 +45,13 @@ Everything you need to get started is available here. To run a development envir
 you need only do the following (assuming you have `node` and `npm` installed):
 
 ```
-$ npm install
-$ npm run app
+$ yarn
+$ yarn global add concurrently
+$ yarn run app
 ```
 
 This will start the development build of Notebag which will hot reload for any changes
-you make to the Vue app. Should you make any changes to the Electron app, you have to 
+you make to the Vue app. Should you make any changes to the Electron app, you have to
 restart the process.
 
 ## Building the app
@@ -58,17 +59,17 @@ restart the process.
 To build a standalone version of Notebag you can run one of the following:
 
 ```
-$ npm run dist:all -- (Builds for all platforms)
-$ npm run dist:w -- Windows
-$ npm run dist:m -- Mac
-$ npm run dist:l -- Linux
+$ yarn run dist:all -- (Builds for all platforms)
+$ yarn run dist:w -- Windows
+$ yarn run dist:m -- Mac
+$ yarn run dist:l -- Linux
 ```
 
 ### Code-signing and notarizing the app
 
 If you have a valid Windows Code Signing Certificate in p12 format, you can specify the path and
 password to access it under `electron-builder.env` - Mine was usually located in the `build` directory
-and named `windows_cert.p12` 
+and named `windows_cert.p12`
 
 On Mac, if you have a valid developer certificate, it will be automatically used on building the app.
 To notarize it on Apple's servers, be sure to replace the credentials in `.env.example` and rename it to
