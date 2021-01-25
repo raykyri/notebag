@@ -2,7 +2,7 @@
 	<div class="note-list">
 		<div class="note-list-elastic-wrapper" data-elastic-wrapper>
 			<div
-				v-for="(note, arrayIdx, objectIdx) in notes"
+				v-for="(note) in notes"
 				:class="noteClassName(note.id)"
 				:key="note.id"
 				:id="'note-' + note.id"
@@ -11,10 +11,6 @@
 				@click="setActiveNote(note.id)"
 				tabindex="0"
 			>
-				<div class="note__index shortcut-button" v-show="objectIdx !== undefined ? objectIdx < 9 && !archive : arrayIdx < 9 && !archive">{{
-					objectIdx !== undefined ? objectIdx+1 : arrayIdx+1
-				}}</div>
-
 				<div>
 					<div class="note__meta">
 						<span class="note__title">{{ noteTitle(note) }}</span>
@@ -177,21 +173,6 @@
 		border-radius: 4px;
 		position: relative;
 
-		&__index {
-			font-size: 10px;
-			display: inline-block;
-			background: var(--text--dark);
-			color: var(--body);
-			padding: 4px;
-			margin-right: 4px;
-			border-radius: 4px;
-			position: absolute;
-			right: 0;
-			top: 50%;
-			transform: translateX(-45%) translateY(-55%);
-			opacity: 0;
-		}
-
 		> div {
 			display: flex;
 			.note__meta {
@@ -268,10 +249,6 @@
 			outline: none;
 			cursor: pointer;
 			background-color: var(--note-background--hover);
-
-			.note__index {
-				opacity: 1;
-			}
 
 			.note__actions {
 				opacity: 1;
