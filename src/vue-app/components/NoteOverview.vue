@@ -1,6 +1,6 @@
 <template>
 	<div :class="overviewClass(isArchive)">
-		<input v-model="searchInput" @keydown="handleEnter" ref="searchField" class="note-overview__search" placeholder="Search for notes…" type="text" tabindex="0"/>
+		<input v-model="searchInput" @keydown="handleEnter" ref="searchField" class="note-overview__search" placeholder="Search…" type="text" tabindex="0"/>
 		<div class="note-overview__notes">
 			<note-list ref="list" :archive="isArchive" :notes="searchResults"></note-list>
 		</div>
@@ -174,7 +174,7 @@ const FUSE_OPTIONS = {
 	.note-overview {
 		width: 100%;
 		max-height: 20rem;
-		padding: 1rem 1.2rem;
+		padding: 1rem 1.2rem 0.2rem;
 		position: relative;
 		background-color: var(--note-pane);
 		overflow-y: auto;

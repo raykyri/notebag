@@ -1,34 +1,36 @@
 <template>
-	<div :class="noteListClassName()">
-		<div
-			v-for="(note, arrayIdx, objectIdx) in notes"
-			:class="noteClassName(note.id)"
-			:key="note.id"
-			ref="note"
-			@keydown="evt => selectNote(evt, note.id)"
-			@click="setActiveNote(note.id)"
-			tabindex="0"
-		>
-			<div class="note__index shortcut-button" v-show="objectIdx !== undefined ? objectIdx < 9 && !archive : arrayIdx < 9 && !archive">{{
-				objectIdx !== undefined ? objectIdx+1 : arrayIdx+1
-			}}</div>
+	<div class="note-list">
+		<div class="note-list-elastic-wrapper">
+			<div
+				v-for="(note, arrayIdx, objectIdx) in notes"
+				:class="noteClassName(note.id)"
+				:key="note.id"
+				ref="note"
+				@keydown="evt => selectNote(evt, note.id)"
+				@click="setActiveNote(note.id)"
+				tabindex="0"
+			>
+				<div class="note__index shortcut-button" v-show="objectIdx !== undefined ? objectIdx < 9 && !archive : arrayIdx < 9 && !archive">{{
+					objectIdx !== undefined ? objectIdx+1 : arrayIdx+1
+				}}</div>
 
-			<div>
-				<div class="note__meta">
-					<span class="note__title">{{ noteTitle(note) }}</span>
-					<div class="note__categories" v-if="note.categories && note.categories.length">
-						<category-pill v-for="(category, idx) in note.categories.slice().reverse()" :key="idx" :category="category" />
+				<div>
+					<div class="note__meta">
+						<span class="note__title">{{ noteTitle(note) }}</span>
+						<div class="note__categories" v-if="note.categories && note.categories.length">
+							<category-pill v-for="(category, idx) in note.categories.slice().reverse()" :key="idx" :category="category" />
+						</div>
 					</div>
-				</div>
 
-				<div class="note__body" v-html="notePreview(note)" />
+					<div class="note__body" v-html="notePreview(note)" />
 
-				<div class="note__actions">
-					<svg tabindex="0" v-if="archive" @click.stop="dearchiveNote(note.id)" @keydown.stop="event => dearchiveNote(note.id, event)" class="no-cycle action action--dearchive" title="Move back to notes" viewBox="0 0 384 512"><path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/></svg>
-					<svg tabindex="0" @click.stop="deleteNote(note.id)" @keydown="event => deleteNote(note.id, event)" class="no-cycle action action--trash" title="Delete note permanently"  viewBox="0 0 448 512"><path d="M432 80h-82.4l-34-56.7A48 48 0 0 0 274.4 0H173.6a48 48 0 0 0-41.2 23.3L98.4 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16l21.2 339a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM173.6 48h100.8l19.2 32H154.4zm173.3 416H101.11l-21-336h287.8z"/></svg>
-					<svg tabindex="0" v-if="!archive" @click.stop="archiveNote(note.id)" @keydown.stop="event => archiveNote(note.id, event)" class="no-cycle action action--archive" title="Move note to archive" viewBox="0 0 512 512"><path d="M464 32H48C21.5 32 0 53.5 0 80v80c0 8.8 7.2 16 16 16h16v272c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V176h16c8.8 0 16-7.2 16-16V80c0-26.5-21.5-48-48-48zm-32 400H80V176h352v256zm32-304H48V80h416v48zM204 272h104c6.6 0 12-5.4 12-12v-24c0-6.6-5.4-12-12-12H204c-6.6 0-12 5.4-12 12v24c0 6.6 5.4 12 12 12z"/></svg>
-					<svg tabindex="0" v-if="!archive && note.pinned === computedProject" @click.stop="unpinNote(note.id)" class="no-cycle action action--unpin" viewBox="0 0 384 512"><path d="M298.028 214.267L285.793 96H328c13.255 0 24-10.745 24-24V24c0-13.255-10.745-24-24-24H56C42.745 0 32 10.745 32 24v48c0 13.255 10.745 24 24 24h42.207L85.972 214.267C37.465 236.82 0 277.261 0 328c0 13.255 10.745 24 24 24h136v104.007c0 1.242.289 2.467.845 3.578l24 48c2.941 5.882 11.364 5.893 14.311 0l24-48a8.008 8.008 0 0 0 .845-3.578V352h136c13.255 0 24-10.745 24-24-.001-51.183-37.983-91.42-85.973-113.733z"/></svg>
-					<svg tabindex="0" v-if="!archive && (!note.pinned || note.pinned !== computedProject)" @click.stop="pinNote(note.id)" class="no-cycle action action--pin" viewBox="0 0 384 512"><path d="M306.5 186.6l-5.7-42.6H328c13.2 0 24-10.8 24-24V24c0-13.2-10.8-24-24-24H56C42.8 0 32 10.8 32 24v96c0 13.2 10.8 24 24 24h27.2l-5.7 42.6C29.6 219.4 0 270.7 0 328c0 13.2 10.8 24 24 24h144v104c0 .9.1 1.7.4 2.5l16 48c2.4 7.3 12.8 7.3 15.2 0l16-48c.3-.8.4-1.7.4-2.5V352h144c13.2 0 24-10.8 24-24 0-57.3-29.6-108.6-77.5-141.4zM50.5 304c8.3-38.5 35.6-70 71.5-87.8L138 96H80V48h224v48h-58l16 120.2c35.8 17.8 63.2 49.4 71.5 87.8z"/></svg>
+					<div class="note__actions">
+						<svg tabindex="0" v-if="archive" @click.stop="dearchiveNote(note.id)" @keydown.stop="event => dearchiveNote(note.id, event)" class="no-cycle action action--dearchive" title="Move back to notes" viewBox="0 0 384 512"><path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/></svg>
+						<svg tabindex="0" @click.stop="deleteNote(note.id)" @keydown="event => deleteNote(note.id, event)" class="no-cycle action action--trash" title="Delete note permanently"  viewBox="0 0 448 512"><path d="M432 80h-82.4l-34-56.7A48 48 0 0 0 274.4 0H173.6a48 48 0 0 0-41.2 23.3L98.4 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16l21.2 339a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM173.6 48h100.8l19.2 32H154.4zm173.3 416H101.11l-21-336h287.8z"/></svg>
+						<svg tabindex="0" v-if="!archive" @click.stop="archiveNote(note.id)" @keydown.stop="event => archiveNote(note.id, event)" class="no-cycle action action--archive" title="Move note to archive" viewBox="0 0 512 512"><path d="M464 32H48C21.5 32 0 53.5 0 80v80c0 8.8 7.2 16 16 16h16v272c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V176h16c8.8 0 16-7.2 16-16V80c0-26.5-21.5-48-48-48zm-32 400H80V176h352v256zm32-304H48V80h416v48zM204 272h104c6.6 0 12-5.4 12-12v-24c0-6.6-5.4-12-12-12H204c-6.6 0-12 5.4-12 12v24c0 6.6 5.4 12 12 12z"/></svg>
+						<svg tabindex="0" v-if="!archive && note.pinned === computedProject" @click.stop="unpinNote(note.id)" class="no-cycle action action--unpin" viewBox="0 0 384 512"><path d="M298.028 214.267L285.793 96H328c13.255 0 24-10.745 24-24V24c0-13.255-10.745-24-24-24H56C42.745 0 32 10.745 32 24v48c0 13.255 10.745 24 24 24h42.207L85.972 214.267C37.465 236.82 0 277.261 0 328c0 13.255 10.745 24 24 24h136v104.007c0 1.242.289 2.467.845 3.578l24 48c2.941 5.882 11.364 5.893 14.311 0l24-48a8.008 8.008 0 0 0 .845-3.578V352h136c13.255 0 24-10.745 24-24-.001-51.183-37.983-91.42-85.973-113.733z"/></svg>
+						<svg tabindex="0" v-if="!archive && (!note.pinned || note.pinned !== computedProject)" @click.stop="pinNote(note.id)" class="no-cycle action action--pin" viewBox="0 0 384 512"><path d="M306.5 186.6l-5.7-42.6H328c13.2 0 24-10.8 24-24V24c0-13.2-10.8-24-24-24H56C42.8 0 32 10.8 32 24v96c0 13.2 10.8 24 24 24h27.2l-5.7 42.6C29.6 219.4 0 270.7 0 328c0 13.2 10.8 24 24 24h144v104c0 .9.1 1.7.4 2.5l16 48c2.4 7.3 12.8 7.3 15.2 0l16-48c.3-.8.4-1.7.4-2.5V352h144c13.2 0 24-10.8 24-24 0-57.3-29.6-108.6-77.5-141.4zM50.5 304c8.3-38.5 35.6-70 71.5-87.8L138 96H80V48h224v48h-58l16 120.2c35.8 17.8 63.2 49.4 71.5 87.8z"/></svg>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -63,8 +65,8 @@
 		},
 		mounted() {
 			setTimeout(() => {
-				let noteOverview = document.querySelector(".note-list");
-				elasticScroll({ targets: noteOverview, intensity: 1 });
+				let noteOverview = document.querySelector(".note-list-elastic-wrapper");
+				elasticScroll({ targets: noteOverview, intensity: 0.66 });
 			}, 0);
 		},
 		methods: {
@@ -136,12 +138,6 @@
 				};
 			},
 
-			noteListClassName() {
-				return {
-					"note-list": true,
-				};
-			},
-
 			noteTitle(note) {
 				return note.title.trim().length > 0
 					? note.title
@@ -159,7 +155,7 @@
 </script>
 
 <style lang="scss">
-	.note-list {
+	.note-list-elastic-wrapper {
                 max-height: 14.2rem;
                 overflow-y: scroll;
 	}
@@ -263,6 +259,7 @@
 		}
 
 		&:hover,
+		&.is-active,
 		&:active,
 		&:focus,
 		&:focus-within {

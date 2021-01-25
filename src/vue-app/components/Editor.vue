@@ -298,7 +298,7 @@
 
 			setTimeout(() => {
 				let editingContainer = document.querySelector(".editing-container");
-				elasticScroll({ targets: editingContainer, intensity: 1 });
+				elasticScroll({ targets: editingContainer, intensity: 0.66 });
 
 				let proseMirror = document.querySelector(".ProseMirror");
 				proseMirror.addEventListener("copy", convertClipboardToMarkdown);
@@ -323,13 +323,14 @@
 <style lang="scss">
 	.editing-area {
 		width: 100%;
-		padding: 0.2rem 1.2rem 1rem;
+		padding: 0.2rem 1.2rem 0rem;
 		position: relative;
 		font-size: var(--font-size);
 	}
 	.editing-container {
-		max-height: calc(100vh - 22rem);
+		max-height: calc(100vh - 18.4rem);
 		overflow-y: auto;
+		padding-top: 0.8rem;
 	}
 
 	.editor {
@@ -413,6 +414,11 @@
 
 		&__content .find {
 			background: rgba(255, 213, 0, 0.4);
+		}
+
+		&__content p {
+			margin-block-start: 0.6em;
+			margin-block-end: 0.6em;
 		}
 
 		&__content h1,
