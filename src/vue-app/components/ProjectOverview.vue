@@ -260,8 +260,6 @@
 				}
 			},
 			setupProjectTab() {
-				console.log("PROJECT TAB -- SETUP");
-
 				this.selectedIndex = 0;
 				this.searchAgent = new Fuse(Object.values(this.sortedProjects), PROJECT_FUSE_OPTIONS);
 				this.$nextTick(() => {
@@ -282,8 +280,6 @@
 				}
 			},
 			teardownProjectTab() {
-				console.log("PROJECT TAB -- TEARDOWN");
-
 				Mousetrap.unbind("down");
 				Mousetrap.unbind("up");
 

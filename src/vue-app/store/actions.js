@@ -29,8 +29,6 @@ export default {
 	SET_LINKS: "setLinks",
 	SET_NOTES: "setNotes",
 
-	MOVE_ONE_NOTE: "moveOneNote",
-
 	SET_PREFERENCE: "setPreference",
 	SET_SHORTCUT: "setShortcut",
 	SUSPEND_SHORTCUT: "suspendShortcut",

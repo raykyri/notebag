@@ -216,23 +216,6 @@ export default new Vuex.Store({
 			EventBus.$trigger(Events.MODE_SWITCHED_AFTER, "editor");
 		},
 
-		[Actions.MOVE_ONE_NOTE](state, direction) {
-			const indexModifier = direction === Payloads.MOVE_DOWN
-				? 1
-				: -1;
-
-			const noteKeys = Object.keys(state.notes);
-			const currentNoteIndex = noteKeys.indexOf(state.activeNote);
-			const newNoteIndex = currentNoteIndex + indexModifier;
-			const id = noteKeys[newNoteIndex];
-
-			if (noteKeys[newNoteIndex]) {
-				state.activeNote = noteKeys[newNoteIndex];
-				electronStore.set(ACTIVE_NOTE, id);
-				EventBus.$emit(Events.ACTIVE_NOTE_CHANGED, state.notes[id]);
-			}
-		},
-
 		[Actions.SET_PREFERENCE](state, payload) {
 			const { preference, value } = payload;
 

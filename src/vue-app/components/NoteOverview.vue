@@ -122,9 +122,51 @@ const FUSE_OPTIONS = {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
 				}
 			},
-			setupNotesTab() {
-				console.log("NOTES TAB -- SETUP");
+			selectPrevNote() {
+				const notes = Object.values(this.searchResults);
+				const idx = notes.findIndex((note) => note.id === this.$store.state.activeNote);
+				const note = notes[idx - 1];
 
+				if (note) {
+					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
+					this.$nextTick(() => {
+						const wrapper = document.querySelector(".note-list-elastic-wrapper");
+						const item = document.querySelector("#note-" + note.id);
+						const wrapperTop = wrapper.scrollTop;
+						const itemTop = item.offsetTop - item.offsetHeight;
+
+						if (itemTop < wrapperTop) {
+							wrapper.scrollTo({
+								top: itemTop - item.offsetHeight,
+								behavior: "smooth"
+							});
+						}
+					});
+				}
+			},
+			selectNextNote() {
+				const notes = Object.values(this.searchResults);
+				const idx = notes.findIndex((note) => note.id === this.$store.state.activeNote);
+				const note = notes[idx + 1];
+
+				if (note) {
+					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
+					this.$nextTick(() => {
+						const wrapper = document.querySelector(".note-list-elastic-wrapper");
+						const item = document.querySelector("#note-" + note.id);
+						const wrapperBottom = wrapper.scrollTop + wrapper.clientHeight;
+						const itemBottom = item.offsetTop;
+
+						if (itemBottom > wrapperBottom) {
+							wrapper.scrollTo({
+								top: wrapper.scrollTop + (itemBottom - wrapperBottom),
+								behavior: "smooth"
+							});
+						}
+					});
+				}
+			},
+			setupNotesTab() {
 				this.selectedIndex = 0;
 				this.$nextTick(() => this.$refs.searchField.focus());
 
@@ -136,8 +178,6 @@ const FUSE_OPTIONS = {
 				Mousetrap.bind("up", this.cycleElements);
 			},
 			teardownNotesTab() {
-				console.log("NOTES TAB -- TEARDOWN");
-
 				for (let i=1; i<10; i++) {
 					Mousetrap.unbind(`ctrl+${i}`);
 				}
@@ -165,8 +205,16 @@ const FUSE_OPTIONS = {
 			};
 		},
 		created() {
+			// remove any previous listeners
+			EventBus.$off(Events.SEARCHING_CATEGORY);
+			EventBus.$off(Events.REQUESTING_PREV_NOTE);
+			EventBus.$off(Events.REQUESTING_NEXT_NOTE);
+
+			// add fresh listeners
 			EventBus.$on(Events.SEARCHING_CATEGORY, category => this.searchInput = category);
-		}
+			EventBus.$on(Events.REQUESTING_PREV_NOTE, () => this.selectPrevNote());
+			EventBus.$on(Events.REQUESTING_NEXT_NOTE, () => this.selectNextNote());
+		},
 	};
 </script>
 

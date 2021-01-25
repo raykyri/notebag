@@ -53,10 +53,10 @@
 		},
 		methods: {
 			[Shortcuts.GO_UP_NOTE]() {
-				this.$store.commit(Actions.MOVE_ONE_NOTE, Payloads.MOVE_UP);
+				EventBus.$emit(Events.REQUESTING_PREV_NOTE);
 			},
 			[Shortcuts.GO_DOWN_NOTE]() {
-				this.$store.commit(Actions.MOVE_ONE_NOTE, Payloads.MOVE_DOWN);
+				EventBus.$emit(Events.REQUESTING_NEXT_NOTE);
 			},
 			[Shortcuts.FOCUS_SEARCH]() {
 				document.querySelector(".note-overview__search").focus();

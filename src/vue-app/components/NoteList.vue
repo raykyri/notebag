@@ -5,6 +5,7 @@
 				v-for="(note, arrayIdx, objectIdx) in notes"
 				:class="noteClassName(note.id)"
 				:key="note.id"
+				:id="'note-' + note.id"
 				ref="note"
 				@keydown="evt => selectNote(evt, note.id)"
 				@click="setActiveNote(note.id)"

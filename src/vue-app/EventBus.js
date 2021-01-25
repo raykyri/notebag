@@ -10,4 +10,6 @@ export const Events = {
 	MODE_SWITCHED_AFTER: "modeSwitchedAfter",
 	SEARCHING_CATEGORY: "searchingCategory",
 	MIGRATED_NOTES: "migratedNotes",
+	REQUESTING_NEXT_NOTE: "requestingNextNote",
+	REQUESTING_PREV_NOTE: "requestingPrevNote",
 };
