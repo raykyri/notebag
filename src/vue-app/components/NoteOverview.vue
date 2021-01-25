@@ -36,6 +36,7 @@ const FUSE_OPTIONS = {
 	import EventBus, { Events } from "@/EventBus";
 	import Actions from "@/store/actions";
 	import Modes from "@/store/modes";
+	import { debounce } from "@/utilities/debounce";
 
 	import NoteList from "@/components/NoteList";
 
@@ -51,6 +52,13 @@ const FUSE_OPTIONS = {
 				},
 				deep: true,
 			},
+			searchResults: {
+				handler: debounce(function() {
+					// const activeNote = newNotes.findIndex((note) => note.id === this.$store.state.activeNote);
+					// if (activeNote === -1) this.switchToNote(0);
+					this.switchToNote(0);
+				}, 50),
+			}
 		},
 		computed: {
 			...mapGetters({
@@ -72,7 +80,7 @@ const FUSE_OPTIONS = {
 			[Events.MODE_SWITCHED_AFTER]: {
 				priority: 0,
 				handler(event, mode) {
-					if (mode === Modes.NOTES || mode === Modes.ARCHIVE) {
+					if (mode === Modes.EDITOR || mode === Modes.ARCHIVE) {
 						this.setupNotesTab();
 					}
 				}
@@ -81,7 +89,7 @@ const FUSE_OPTIONS = {
 			[Events.MODE_SWITCHED]: {
 				priority: 10,
 				handler(event, mode) {
-					if (mode !== Modes.NOTES && mode !== Modes.ARCHIVE) {
+					if (mode !== Modes.EDITOR && mode !== Modes.ARCHIVE) {
 						this.teardownNotesTab();
 					}
 				}
@@ -120,6 +128,19 @@ const FUSE_OPTIONS = {
 
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
+					this.$nextTick(() => {
+						const wrapper = document.querySelector(".note-list-elastic-wrapper");
+						const item = document.querySelector("#note-" + note.id);
+						const wrapperTop = wrapper.scrollTop;
+						const itemTop = item.offsetTop - item.offsetHeight;
+
+						if (itemTop < wrapperTop) {
+							wrapper.scrollTo({
+								top: itemTop - item.offsetHeight,
+								behavior: "smooth"
+							});
+						}
+					});
 				}
 			},
 			selectPrevNote() {

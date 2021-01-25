@@ -60,6 +60,7 @@
 			},
 			[Shortcuts.FOCUS_SEARCH]() {
 				document.querySelector(".note-overview__search").focus();
+				document.querySelector(".note-overview__search").select();
 			},
 			[Shortcuts.NEW_NOTE]() {
 				this.$store.dispatch(Actions.ADD_NOTE);
@@ -179,6 +180,6 @@
 
 <style lang="scss">
 	.nv-layout {
-		max-width: calc(100vw - 52px);
+		width: calc(100vw - 52px);
 	}
 </style>

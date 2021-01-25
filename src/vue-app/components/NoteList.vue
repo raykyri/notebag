@@ -157,6 +157,7 @@
 
 <style lang="scss">
 	.note-list-elastic-wrapper {
+		width: 100%;
                 max-height: 14.2rem;
                 overflow-y: scroll;
 	}
@@ -209,6 +210,7 @@
 			margin-right: 0.5rem;
 			font-weight: 700;
 			max-width: 75%;
+			letter-spacing: .1px;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -235,9 +237,6 @@
 		&__actions {
 			user-select: none;
 			white-space: nowrap;
-
-			/*opacity: 0;*/
-			/*visibility: hidden;*/
 			transition: visibility 0s ease-in 0ms, opacity 0ms;
 			fill: var(--note-actions--inactive);
 			color: var(--note-actions--inactive);
