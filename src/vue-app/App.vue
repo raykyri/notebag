@@ -47,7 +47,7 @@
 
 		--body: #fcfcfb;
 		--muted: #efefee;
-		--muted--intense: #d1d1d0;
+		--muted--intense: #e4e4e5;
 
 		--text: #222222;
 		--text--muted: #a9a9a9;

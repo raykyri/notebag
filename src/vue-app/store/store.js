@@ -70,7 +70,7 @@ export default new Vuex.Store({
 		projects: noteStorage.get(PROJECTS, {}),
 		archivedNotes: noteStorage.get(ARCHIVED_NOTES, {}),
 		links: noteStorage.get(LINKS, []),
-		mode: Modes.EDITOR,
+		mode: Modes.NOTES,
 	},
 	mutations: {
 		[Actions.ADD_TUTORIAL_NOTE](state) {
@@ -201,8 +201,8 @@ export default new Vuex.Store({
 				return;
 			}
 
-			if (state.mode !== Modes.EDITOR) {
-				state.mode = Modes.EDITOR;
+			if (state.mode !== Modes.NOTES) {
+				state.mode = Modes.NOTES;
 			}
 
 			state.activeNote = id;
@@ -432,11 +432,11 @@ export default new Vuex.Store({
 
 			if (switchToNote) {
 				state.activeNote = note.id;
-				state.mode = Modes.EDITOR;
+				state.mode = Modes.NOTES;
 				electronStore.set(ACTIVE_NOTE, note.id);
 
-				EventBus.$trigger(Events.MODE_SWITCHED, Modes.EDITOR);
-				EventBus.$trigger(Events.MODE_SWITCHED_AFTER, Modes.EDITOR);
+				EventBus.$trigger(Events.MODE_SWITCHED, Modes.NOTES);
+				EventBus.$trigger(Events.MODE_SWITCHED_AFTER, Modes.NOTES);
 				EventBus.$emit(Events.ACTIVE_NOTE_CHANGED, state.notes[note.id]);
 			}
 

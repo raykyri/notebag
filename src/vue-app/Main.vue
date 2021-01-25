@@ -1,10 +1,12 @@
 <template>
 	<div class="main layout flex">
-		<omnibar />
 		<viewbar />
-		<editor v-show="mode === Modes.EDITOR" />
-		<note-overview v-show="mode === Modes.NOTES || mode === Modes.ARCHIVE" />
+		<div class="nv-layout" v-show="mode === Modes.NOTES">
+			<note-overview />
+			<editor />
+                </div>
 		<project-overview v-show="mode === Modes.CATEGORIES" />
+		<note-overview v-show="mode === Modes.ARCHIVE" />
 	</div>
 </template>
 
@@ -27,7 +29,6 @@
 	import NoteOverview from "@/components/NoteOverview";
 
 	import Viewbar from "@/components/Viewbar";
-	import Omnibar from "@/components/Omnibar";
 	import Editor from "@/components/Editor";
 
 	import { makeAccelerator, redefineMousetrapShortcut } from "@/utilities/shortcuts";
@@ -39,7 +40,6 @@
 			ProjectOverview,
 			NoteOverview,
 			Viewbar,
-			Omnibar,
 			Editor,
 		},
 		computed: {
@@ -125,15 +125,13 @@
 			Mousetrap.bind(toggleThemeAccelerator, this[Shortcuts.TOGGLE_THEME]);
 
 			const modifier = makeAccelerator(defaultShortcuts[shortcutOs][Shortcuts.TAB_SWITCH_MODIFIER], true);
-			Mousetrap.bind(`${modifier}+1`, () => this.setMode(Modes.EDITOR));
-			Mousetrap.bind(`${modifier}+2`, () => this.setMode(Modes.NOTES));
-			Mousetrap.bind(`${modifier}+3`, () => this.setMode(Modes.CATEGORIES));
+			Mousetrap.bind(`${modifier}+1`, () => this.setMode(Modes.NOTES));
+			Mousetrap.bind(`${modifier}+2`, () => this.setMode(Modes.CATEGORIES));
+			Mousetrap.bind(`${modifier}+3`, () => this.setMode(Modes.ARCHIVE));
 
 			for (let i=4; i<=9; i++) {
 				Mousetrap.bind(`${modifier}+${i}`, () => this.setActiveProject(i-4));
 			}
-
-			Mousetrap.bind(`${modifier}+0`, () => this.setMode(Modes.ARCHIVE));
 
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.NEW_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.NEW_NOTE, oldKeys, newKeys));
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.DELETE_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.DELETE_NOTE, oldKeys, newKeys));
@@ -147,5 +145,7 @@
 </script>
 
 <style lang="scss">
-
+	.nv-layout {
+		max-width: calc(100vw - 52px);
+	}
 </style>

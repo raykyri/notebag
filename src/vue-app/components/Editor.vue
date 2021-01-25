@@ -1,83 +1,85 @@
 <template>
 	<div class="editing-area" :style="cssVariables" ref="editingArea">
-		<div class="editor" v-if="activeNote">
-			<input @keyup="setNoteTitle" @keydown="switchFocusToContent" :value="activeNote.title" class="editor__title" placeholder="New note" ref="editorTitle">
-			<editor-content class="editor__content" :editor="editor" />
-			<div class="editor__backlinks backlinks" v-show="links.length">
-				<div v-for="(link, idx) in links" :key="idx" class="backlinks__note" tabindex="0" @keydown="evt => switchToBacklink(notes[link.originNote].title, evt)" @click="() => switchToBacklink(notes[link.originNote].title)">
-					<h4 class="backlinks__title">{{ backlinkTitle(notes[link.originNote].title) }}</h4>
-					<p class="backlinks__context" v-html="contextSnippet(link)"></p>
+		<div class="editing-container">
+			<div class="editor" v-if="activeNote">
+				<input @keyup="setNoteTitle" @keydown="switchFocusToContent" :value="activeNote.title" class="editor__title" placeholder="New note" ref="editorTitle">
+				<editor-content class="editor__content" :editor="editor" />
+				<div class="editor__backlinks backlinks" v-show="links.length">
+					<div v-for="(link, idx) in links" :key="idx" class="backlinks__note" tabindex="0" @keydown="evt => switchToBacklink(notes[link.originNote].title, evt)" @click="() => switchToBacklink(notes[link.originNote].title)">
+						<h4 class="backlinks__title">{{ backlinkTitle(notes[link.originNote].title) }}</h4>
+						<p class="backlinks__context" v-html="contextSnippet(link)"></p>
+					</div>
+				</div>
+
+				<div ref="searchBar" v-show="searching" class="editor__search">
+					<input
+						ref="search"
+						@keydown.enter.prevent="runSearch"
+						placeholder="Search …"
+						type="text"
+						v-model="searchTerm"
+						class="form-field"
+					/>
+
+					<input
+						ref="replace"
+						@keydown.enter.prevent="runReplace"
+						placeholder="Replace …"
+						type="text"
+						v-model="replaceWith"
+						class="form-field"
+					/>
+
+					<button
+						ref="replaceButton"
+						class="search__action"
+						@click="runReplaceButton"
+						@keydown.enter.prevent="runReplaceButton"
+						@keydown.space.prevent="runReplaceButton"
+					>
+						Replace
+					</button>
+
+					<button
+						ref="replaceAllButton"
+						class="search__action"
+						@click="runReplaceAll"
+						@keydown.enter.prevent="runReplaceAll"
+						@keydown.space.prevent="runReplaceAll"
+					>
+						Replace All
+					</button>
 				</div>
 			</div>
 
-			<div ref="searchBar" v-show="searching" class="editor__search">
-				<input
-					ref="search"
-					@keydown.enter.prevent="runSearch"
-					placeholder="Search …"
-					type="text"
-					v-model="searchTerm"
-					class="form-field"
-				/>
+			<div class="intro" v-else-if="shouldShowIntro">
+				<h1 class="intro__title">Welcome to Notebag!</h1>
 
-				<input
-					ref="replace"
-					@keydown.enter.prevent="runReplace"
-					placeholder="Replace …"
-					type="text"
-					v-model="replaceWith"
-					class="form-field"
-				/>
+				<p class="intro__instructions">
+					You don't seem to have any notes yet. To get started, you can create your first notes by pressing one of
+					the buttons below. The tutorial consists of five notes that will show you everything that Notebag has to
+					offer! It is <strong>highly</strong> recommended to begin.
+				</p>
 
-				<button
-					ref="replaceButton"
-					class="search__action"
-					@click="runReplaceButton"
-					@keydown.enter.prevent="runReplaceButton"
-					@keydown.space.prevent="runReplaceButton"
-				>
-					Replace
-				</button>
-
-				<button
-					ref="replaceAllButton"
-					class="search__action"
-					@click="runReplaceAll"
-					@keydown.enter.prevent="runReplaceAll"
-					@keydown.space.prevent="runReplaceAll"
-				>
-					Replace All
-				</button>
+				<div>
+					<button @click="$store.commit(Actions.ADD_TUTORIAL_NOTE)" class="intro__cta">Start with a tutorial</button>
+					<button @click="$store.dispatch(Actions.ADD_NOTE)" class="intro__cta cta--secondary">Create empty note</button>
+				</div>
 			</div>
-		</div>
 
-		<div class="intro" v-else-if="shouldShowIntro">
-			<h1 class="intro__title">Welcome to Notebag!</h1>
-
-			<p class="intro__instructions">
-				You don't seem to have any notes yet. To get started, you can create your first notes by pressing one of
-				the buttons below. The tutorial consists of five notes that will show you everything that Notebag has to
-				offer! It is <strong>highly</strong> recommended to begin.
-			</p>
-
-			<div>
-				<button @click="$store.commit(Actions.ADD_TUTORIAL_NOTE)" class="intro__cta">Start with a tutorial</button>
-				<button @click="$store.dispatch(Actions.ADD_NOTE)" class="intro__cta cta--secondary">Create empty note</button>
+			<div class="unselected" v-else>
+				No note is selected.
 			</div>
-		</div>
 
-		<div class="unselected" v-else>
-			No note is selected.
-		</div>
-
-		<div class="suggestions" ref="suggestions">
-			<div
-				v-for="(suggestion, idx) in filteredResults"
-				:key="suggestion.id"
-				@click="selectSuggestion(suggestion)"
-				:class="{ suggestions__suggestion: true, 'suggestions__suggestion--active': selectedResultIndex === idx }"
-			>
-				{{ suggestion.title }}
+			<div class="suggestions" ref="suggestions">
+				<div
+					v-for="(suggestion, idx) in filteredResults"
+					:key="suggestion.id"
+					@click="selectSuggestion(suggestion)"
+					:class="{ suggestions__suggestion: true, 'suggestions__suggestion--active': selectedResultIndex === idx }"
+				>
+					{{ suggestion.title }}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -158,8 +160,10 @@
 				}, 25);
 			},
 			onActiveNoteChanged(activeNote) {
-				this.editor.setContent(activeNote.body);
-				this.setEditorFocus();
+				setTimeout(() => {
+					this.editor.setContent(activeNote.body);
+					this.setEditorFocus();
+				}, 0);
 			},
 			onOmnibarHidden() {
 				if (!this.activeNote) {
@@ -268,7 +272,7 @@
 					this.popup = null;
 				}
 
-				if (mode === Modes.EDITOR) this.setEditorFocus();
+				if (mode === Modes.NOTES) this.setEditorFocus();
 			},
 		},
 		computed: {
@@ -325,12 +329,14 @@
 
 <style lang="scss">
 	.editing-area {
-		overflow-y: auto;
 		width: 100%;
-		height: 100vh;
-		padding: 3rem;
+		padding: 1rem 1.2rem;
 		position: relative;
 		font-size: var(--font-size);
+	}
+	.editing-container {
+		height: calc(100vh - 22rem);
+		overflow-y: auto;
 	}
 
 	.editor {

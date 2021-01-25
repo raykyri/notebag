@@ -1,13 +1,6 @@
 <template>
 	<div :class="overviewClass(isArchive)">
-		<h1 class="note-overview__title">
-			{{ this.isArchive ? "Archive" : "Note overview" }}
-		</h1>
-
 		<input v-model="searchInput" @keydown="handleEnter" ref="searchField" class="note-overview__search" placeholder="Search for notes…" type="text" tabindex="0"/>
-		<span class="tip" v-if="!isArchive">Tip: Press <code>Ctrl+1-9</code> to open notes quickly.</span>
-		<span class="tip" v-if="isArchive">Tip: If you want to open a note again, move it back to your active notes.</span>
-
 		<div class="note-overview__notes">
 			<note-list ref="list" :archive="isArchive" :notes="searchResults"></note-list>
 		</div>
@@ -179,9 +172,9 @@ const FUSE_OPTIONS = {
 
 <style lang="scss">
 	.note-overview {
-		height: 100vh;
 		width: 100%;
-		padding: 3rem;
+		max-height: 20rem;
+		padding: 1rem 1.2rem;
 		position: relative;
 		background-color: var(--note-pane);
 		overflow-y: auto;
@@ -195,14 +188,14 @@ const FUSE_OPTIONS = {
 			color: var(--text);
 			background: var(--muted);
 			border-radius: 4px;
-			padding: .66rem;
+			padding: .55rem .66rem;
 			width: 100%;
 			outline: none;
 			border: none;
 		}
 
 		&__notes {
-			margin-top: 1rem;
+			margin-top: 0.25rem;
 		}
 	}
 

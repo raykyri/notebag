@@ -363,7 +363,7 @@
 	.project-overview {
 		height: 100vh;
 		width: 100%;
-		padding: 3rem;
+		padding: 1rem 1.2rem;
 		position: relative;
 		background-color: var(--note-pane);
 		overflow-y: auto;
