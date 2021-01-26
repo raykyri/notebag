@@ -51,7 +51,6 @@ export default new Vuex.Store({
 				[Shortcuts.SHOW_HIDE_WINDOW]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.SHOW_HIDE_WINDOW}`, defaultShortcuts[shortcutOs][Shortcuts.SHOW_HIDE_WINDOW]),
 				[Shortcuts.TOGGLE_THEME]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.TOGGLE_THEME}`, defaultShortcuts[shortcutOs][Shortcuts.TOGGLE_THEME]),
 
-				[Shortcuts.NEW_NOTE]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.NEW_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.NEW_NOTE]),
 				[Shortcuts.DELETE_NOTE]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.DELETE_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.DELETE_NOTE]),
 				[Shortcuts.COMPLETE_TODO]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.COMPLETE_TODO}`, defaultShortcuts[shortcutOs][Shortcuts.COMPLETE_TODO]),
 				[Shortcuts.FOCUS_SEARCH]: electronStore.get(`${PREFERENCES}.${SHORTCUTS}.${Shortcuts.FOCUS_SEARCH}`, defaultShortcuts[shortcutOs][Shortcuts.FOCUS_SEARCH]),

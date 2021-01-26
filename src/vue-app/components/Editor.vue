@@ -91,7 +91,6 @@
 	import { mapState } from "vuex";
 
 	import Mousetrap from "mousetrap";
-	import stripTags from "striptags";
 
 	import { NoteSuggestions, CategorySuggestions } from "@/plugins/NotebagSuggestions";
 	import elasticScroll from "elastic-scroll-polyfill";
@@ -144,27 +143,16 @@
 				this.editor = makeEditor(this.activeNote, this.updateNote, NoteSuggestions(this));
 			},
 			setEditorFocus() {
-				setTimeout(() => {
-					if (!this.activeNote || !this.$refs.editorTitle) {
-						return;
-					}
-
-					if (stripTags(this.editor.getHTML()).length > 0 && this.activeNote.cursorPosition) {
-						// setCurrentCursorPosition(this.activeNote.cursorPosition);
-						return;
-					}
-
-					if (this.$refs.editorTitle.value.length > 0) {
-						this.editor.focus();
-						return;
-					}
-
-					this.$refs.editorTitle.focus();
-				}, 25);
+				this.$nextTick(() => {
+					if (!this.activeNote) return;
+					this.editor.focus(0);
+				});
 			},
 			onActiveNoteChanged(activeNote) {
-				this.editor.setContent(activeNote.body);
-				this.setEditorFocus();
+				this.$nextTick(() => {
+					this.editor.setContent(activeNote.body);
+					this.setEditorFocus();
+				});
 			},
 			refocusSelection(event) {
 				if (event.target == document.body) {

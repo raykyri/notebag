@@ -15,6 +15,7 @@
 	import { ipcRenderer } from "electron";
 	import { mapState } from "vuex";
 	import Mousetrap from "mousetrap";
+	import throttle from "lodash.throttle";
 
 	import EventBus, {Events} from "@/EventBus";
 
@@ -52,18 +53,21 @@
 			}
 		},
 		methods: {
-			[Shortcuts.GO_UP_NOTE]() {
+			[Shortcuts.GO_UP_NOTE]: throttle(function() {
 				EventBus.$emit(Events.REQUESTING_PREV_NOTE);
-			},
-			[Shortcuts.GO_DOWN_NOTE]() {
+				document.querySelector(".note-overview__search").blur();
+			}, 50),
+			[Shortcuts.GO_DOWN_NOTE]: throttle(function() {
 				EventBus.$emit(Events.REQUESTING_NEXT_NOTE);
-			},
+				document.querySelector(".note-overview__search").blur();
+			}, 50),
 			[Shortcuts.FOCUS_SEARCH]() {
 				document.querySelector(".note-overview__search").focus();
 				document.querySelector(".note-overview__search").select();
 			},
 			[Shortcuts.NEW_NOTE]() {
-				this.$store.dispatch(Actions.ADD_NOTE);
+				document.querySelector(".note-overview__search").focus();
+				document.querySelector(".note-overview__search").select();
 			},
 			[Shortcuts.DELETE_NOTE]() {
 				if (!this.activeNote) {
@@ -118,7 +122,6 @@
 				electronStore.get(`preferences.shortcuts.${Shortcuts.NEW_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.NEW_NOTE]),
 				true
 			);
-
 			const deleteNoteAccelerator = makeAccelerator(
 				electronStore.get(`preferences.shortcuts.${Shortcuts.DELETE_NOTE}`, defaultShortcuts[shortcutOs][Shortcuts.DELETE_NOTE]),
 				true
@@ -162,7 +165,6 @@
 				Mousetrap.bind(`${modifier}+${i}`, () => this.setActiveProject(i-4));
 			}
 
-			ipcRenderer.on(`shortcut-changed:${Shortcuts.NEW_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.NEW_NOTE, oldKeys, newKeys));
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.DELETE_NOTE}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.DELETE_NOTE, oldKeys, newKeys));
 			ipcRenderer.on(`shortcut-changed:${Shortcuts.TOGGLE_THEME}`, (_, oldKeys, newKeys) => redefineShortcut(Shortcuts.TOGGLE_THEME, oldKeys, newKeys));
 

@@ -36,7 +36,6 @@ const FUSE_OPTIONS = {
 	import EventBus, { Events } from "@/EventBus";
 	import Actions from "@/store/actions";
 	import Modes from "@/store/modes";
-	import { debounce } from "@/utilities/debounce";
 
 	import NoteList from "@/components/NoteList";
 
@@ -51,12 +50,6 @@ const FUSE_OPTIONS = {
 					this.searchAgent = new Fuse(notes, FUSE_OPTIONS);
 				},
 				deep: true,
-			},
-			searchResults: {
-				handler: debounce(function(newNotes) {
-					const activeNote = newNotes.findIndex((note) => note.id === this.$store.state.activeNote);
-					if (activeNote === -1) this.switchToNote(0);
-				}, 50),
 			}
 		},
 		computed: {
@@ -68,11 +61,13 @@ const FUSE_OPTIONS = {
 				return this.mode === Modes.ARCHIVE;
 			},
 			searchResults() {
-				if (!this.mode === Modes.NOTES) return this.notes;
-				if (!this.searchInput && this.mode === Modes.NOTES) return this.notes;
-				if (!this.searchInput && this.isArchive) return this.$store.state.archivedNotes;
+				if (!this.mode === Modes.NOTES) { console.log(this.notes.length); return this.notes; }
+				if (!this.searchInput && this.mode === Modes.NOTES) { console.log(this.notes.length); return this.notes; }
+				if (!this.searchInput && this.isArchive) { console.log("archive"); return this.$store.state.archivedNotes; }
 
-				return this.searchAgent.search(this.searchInput).map(result => result.item);
+				const results = this.searchAgent.search(this.searchInput).map(result => result.item);
+				console.log(results.length);
+				return results;
 			},
 		},
 		events: {
@@ -95,12 +90,19 @@ const FUSE_OPTIONS = {
 			},
 		},
 		methods: {
-			handleEnter(event) {
+			async handleEnter(event) {
 				if (isEnterKey(event)) {
-					const [ note ] = this.searchResults;
-					if (!note || this.$store.state.activeNote === note.id) { return; }
+					const text = event.target.value;
+					if (text.trim() === "") return;
 
-					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
+					const [ note ] = this.searchResults;
+					if (note && this.$store.state.activeNote === note.id) {
+						this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
+					} else {
+						const result = await this.$store.dispatch(Actions.ADD_NOTE, { title: text.trim() });
+						this.$store.commit(Actions.SET_ACTIVE_NOTE, result.id);
+						// TODO: focus edito
+					}
 				}
 			},
 			cycleElements(event) {
@@ -127,62 +129,32 @@ const FUSE_OPTIONS = {
 
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
-					this.$nextTick(() => {
-						const wrapper = document.querySelector(".note-list");
-						const item = document.querySelector("#note-" + note.id);
-						const wrapperTop = wrapper.scrollTop;
-						const itemTop = item.offsetTop - item.offsetHeight;
-
-						if (itemTop < wrapperTop) {
-							wrapper.scrollTo({
-								top: itemTop - item.offsetHeight,
-								behavior: "smooth"
-							});
-						}
-					});
+					// this.$nextTick(() => {
+					// 	document.querySelector("#note-" + note.id).scrollIntoView({ smooth: true, block: "nearest" });
+					// });
 				}
 			},
-			selectPrevNote() {
+			selectPrevNote() { console.log("but...", this.searchResults.length);
 				const notes = Object.values(this.searchResults);
 				const idx = notes.findIndex((note) => note.id === this.$store.state.activeNote);
-				const note = notes[idx - 1];
+				const note = idx === -1 ? notes[0] : notes[idx - 1];
 
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
 					this.$nextTick(() => {
-						const wrapper = document.querySelector(".note-list");
-						const item = document.querySelector("#note-" + note.id);
-						const wrapperTop = wrapper.scrollTop;
-						const itemTop = item.offsetTop;
-
-						if (itemTop < wrapperTop) {
-							wrapper.scrollTo({
-								top: item.offsetTop,
-								behavior: "smooth"
-							});
-						}
+						document.querySelector("#note-" + note.id).scrollIntoView({ smooth: true, block: "nearest" });
 					});
 				}
 			},
 			selectNextNote() {
 				const notes = Object.values(this.searchResults);
 				const idx = notes.findIndex((note) => note.id === this.$store.state.activeNote);
-				const note = notes[idx + 1];
+				const note = idx === -1 ? notes[0] : notes[idx + 1];
 
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
 					this.$nextTick(() => {
-						const wrapper = document.querySelector(".note-list");
-						const item = document.querySelector("#note-" + note.id);
-						const wrapperBottom = wrapper.scrollTop + wrapper.offsetHeight;
-						const itemBottom = item.offsetTop + item.clientHeight;
-
-						if (itemBottom > wrapperBottom) {
-							wrapper.scrollTo({
-								top: item.offsetTop + item.clientHeight - wrapper.clientHeight,
-								behavior: "smooth"
-							});
-						}
+						document.querySelector("#note-" + note.id).scrollIntoView({ smooth: true, block: "nearest" });
 					});
 				}
 			},
@@ -219,6 +191,7 @@ const FUSE_OPTIONS = {
 				: Object.values(this.$store.getters.sortedNotes);
 
 			return {
+				mode: Modes.NOTES,
 				searchInput: "",
 				searchAgent: new Fuse(notes, FUSE_OPTIONS),
 				selectedIndex: 0,
@@ -241,7 +214,7 @@ const FUSE_OPTIONS = {
 <style lang="scss">
 	.note-overview {
 		width: 100%;
-		max-height: 20rem;
+		height: 18rem;
 		padding: 0.8rem 0.8rem 0.2rem;
 		position: relative;
 		background-color: var(--note-pane);

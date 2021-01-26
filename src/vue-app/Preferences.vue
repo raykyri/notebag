@@ -108,13 +108,6 @@
 					</tr>
 
 					<tr>
-						<td>Create new note</td>
-						<td class="shortcuts-table__shortcut">
-							<key-capture :shortcut="Shortcuts.NEW_NOTE" @captured="setShortcut" />
-						</td>
-					</tr>
-
-					<tr>
 						<td>Delete currently active note</td>
 						<td class="shortcuts-table__shortcut">
 							<key-capture :shortcut="Shortcuts.DELETE_NOTE" @captured="setShortcut" />

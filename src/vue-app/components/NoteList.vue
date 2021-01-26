@@ -4,7 +4,7 @@
 			<div
 				v-for="(note) in notes"
 				:class="noteClassName(note.id)"
-				:key="note.id"
+				:key="noteKeyName(note.id)"
 				:id="'note-' + note.id"
 				ref="note"
 				@keydown="evt => selectNote(evt, note.id)"
@@ -41,6 +41,7 @@
 	import stripTags from "striptags";
 	import elasticScroll from "elastic-scroll-polyfill";
 
+	import EventBus, { Events } from "@/EventBus";
 	import Actions from "@/store/actions";
 
 	import CategoryPill from "@/components/CategoryPill";
@@ -61,6 +62,9 @@
 			}
 		},
 		mounted() {
+			EventBus.$on(Events.ACTIVE_NOTE_CHANGED, () => {
+				this.$forceUpdate();
+			});
 			setTimeout(() => {
 				let noteOverview = document.querySelector(".note-list");
 				elasticScroll({ targets: noteOverview, intensity: 0.66 });
@@ -135,6 +139,10 @@
 				};
 			},
 
+			noteKeyName(id) {
+				return id + (this.$store.getters.isNoteActive(id) ? "-active" : "-inactive");
+			},
+
 			noteTitle(note) {
 				return note.title.trim().length > 0
 					? note.title
@@ -182,7 +190,7 @@
 				flex: 1;
 				flex-grow: 0;
 				flex-shrink: 1;
-				max-width: calc(100% - 80px);
+				max-width: calc(100% - 82px);
 				display: inline-flex;
 			}
 			.note__body {
@@ -247,8 +255,7 @@
 			outline: none;
 		}
 
-		&.is-active,
-		&:active {
+		&.is-active {
 			outline: none;
 			background-color: var(--note-background--hover);
 
