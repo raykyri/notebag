@@ -152,7 +152,7 @@
 </script>
 
 <style lang="scss">
-	.note-list-elastic-wrapper {
+	.note-list {
 		max-width: 100%;
 		width: 100%;
                 max-height: 14.2rem;
@@ -170,9 +170,11 @@
 		margin-bottom: 4px;
 		width: 100%;
 		max-width: 100%;
+		overflow: hidden;
 		max-height: 320px;
 		border-radius: 4px;
 		position: relative;
+		cursor: pointer;
 
 		> div {
 			display: flex;
@@ -180,6 +182,8 @@
 				flex: 1;
 				flex-grow: 0;
 				flex-shrink: 1;
+				max-width: calc(100% - 80px);
+				display: inline-flex;
 			}
 			.note__body {
 				flex-grow: 1;
@@ -192,7 +196,6 @@
 			margin: 0;
 			margin-right: 0.5rem;
 			font-weight: 700;
-			letter-spacing: .1px;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -204,9 +207,9 @@
 			margin-bottom: 0;
 			margin-right: 0.5rem;
 			line-height: 1.5;
-			letter-spacing: .15px;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			user-select: none;
 
 			display: inline-block;
 			overflow: hidden;
@@ -247,7 +250,6 @@
 		&.is-active,
 		&:active {
 			outline: none;
-			cursor: pointer;
 			background-color: var(--note-background--hover);
 
 			.note__actions {
@@ -255,9 +257,6 @@
 				visibility: visible;
 				transition: visibility 0s ease-in 0s, opacity 0ms;
 			}
-		}
-		&:hover {
-			background-color: var(--note-background--hover-light);
 		}
 
 		&--rtl {

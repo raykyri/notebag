@@ -177,7 +177,6 @@
 		font-size: 10px;
 		display: block;
 		color: var(--text--dark);
-		letter-spacing: .5px;
 		text-transform: uppercase;
 		padding-bottom: .5rem;
 	}
@@ -285,7 +284,7 @@
 		--muted--intense: #4a4a4a;
 
 		--text: #f8f8f8;
-		--text--muted: #c5c5c5;
+		--text--muted: #888;
 		--text--dark: #a9a9a9;
 
 
@@ -498,7 +497,6 @@
 		border: 1px solid var(--muted);
 		color: var(--text);
 		font-size: .9rem;
-		letter-spacing: .2px;
 	}
 
 	.select:focus {

@@ -128,7 +128,7 @@ const FUSE_OPTIONS = {
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
 					this.$nextTick(() => {
-						const wrapper = document.querySelector(".note-list-elastic-wrapper");
+						const wrapper = document.querySelector(".note-list");
 						const item = document.querySelector("#note-" + note.id);
 						const wrapperTop = wrapper.scrollTop;
 						const itemTop = item.offsetTop - item.offsetHeight;
@@ -150,14 +150,14 @@ const FUSE_OPTIONS = {
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
 					this.$nextTick(() => {
-						const wrapper = document.querySelector(".note-list-elastic-wrapper");
+						const wrapper = document.querySelector(".note-list");
 						const item = document.querySelector("#note-" + note.id);
 						const wrapperTop = wrapper.scrollTop;
-						const itemTop = item.offsetTop - item.offsetHeight;
+						const itemTop = item.offsetTop;
 
 						if (itemTop < wrapperTop) {
 							wrapper.scrollTo({
-								top: itemTop - item.offsetHeight,
+								top: item.offsetTop,
 								behavior: "smooth"
 							});
 						}
@@ -172,14 +172,14 @@ const FUSE_OPTIONS = {
 				if (note) {
 					this.$store.commit(Actions.SET_ACTIVE_NOTE, note.id);
 					this.$nextTick(() => {
-						const wrapper = document.querySelector(".note-list-elastic-wrapper");
+						const wrapper = document.querySelector(".note-list");
 						const item = document.querySelector("#note-" + note.id);
-						const wrapperBottom = wrapper.scrollTop + wrapper.clientHeight;
-						const itemBottom = item.offsetTop;
+						const wrapperBottom = wrapper.scrollTop + wrapper.offsetHeight;
+						const itemBottom = item.offsetTop + item.clientHeight;
 
 						if (itemBottom > wrapperBottom) {
 							wrapper.scrollTo({
-								top: wrapper.scrollTop + (itemBottom - wrapperBottom),
+								top: item.offsetTop + item.clientHeight - wrapper.clientHeight,
 								behavior: "smooth"
 							});
 						}
@@ -242,7 +242,7 @@ const FUSE_OPTIONS = {
 	.note-overview {
 		width: 100%;
 		max-height: 20rem;
-		padding: 1rem 1.2rem 0.2rem;
+		padding: 0.8rem 0.8rem 0.2rem;
 		position: relative;
 		background-color: var(--note-pane);
 		overflow-y: auto;

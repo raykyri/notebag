@@ -2,7 +2,6 @@
 	<div class="editing-area" :style="cssVariables" ref="editingArea">
 		<div class="editing-container">
 			<div class="editor" v-if="activeNote">
-				<input @keyup="setNoteTitle" @keydown="switchFocusToContent" :value="activeNote.title" class="editor__title" placeholder="New note" ref="editorTitle">
 				<editor-content class="editor__content" :editor="editor" />
 				<div class="editor__backlinks backlinks" v-show="links.length">
 					<div v-for="(link, idx) in links" :key="idx" class="backlinks__note" tabindex="0" @keydown="evt => switchToBacklink(notes[link.originNote].title, evt)" @click="() => switchToBacklink(notes[link.originNote].title)">
@@ -87,9 +86,9 @@
 
 <script>
 /* eslint-disable indent */
-	import {ipcRenderer, remote} from "electron";
-	import {EditorContent} from "tiptap";
-	import {mapState} from "vuex";
+	import { ipcRenderer, remote } from "electron";
+	import { EditorContent } from "tiptap";
+	import { mapState } from "vuex";
 
 	import Mousetrap from "mousetrap";
 	import stripTags from "striptags";
@@ -97,7 +96,7 @@
 	import { NoteSuggestions, CategorySuggestions } from "@/plugins/NotebagSuggestions";
 	import elasticScroll from "elastic-scroll-polyfill";
 
-	import EventBus, {Events} from "@/EventBus";
+	import EventBus, { Events } from "@/EventBus";
 	import Actions from "@/store/actions";
 	import Modes from "@/store/modes";
 
@@ -135,6 +134,9 @@
 			};
 		},
 		methods: {
+			suppressEnter(e) {
+				if (e.keyCode === 13) { e.preventDefault(); }
+			},
 			setNoteTitle: debounce(setNoteTitle, 250),
 			updateNote: asyncDebounce(updateNote, 250),
 			reloadEditor() {
@@ -687,11 +689,15 @@
 		}
 	}
 
-	input::placeholder {
+	textarea {
+		resize: none;
+	}
+
+	input::placeholder, textarea::placeholder {
 		color: var(--placeholder);
 	}
 
-	input, button, .ProseMirror {
+	input, textarea, button, .ProseMirror {
 		outline: none;
 		transform : none !important;
 	}
