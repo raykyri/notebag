@@ -1,12 +1,18 @@
 <template>
 	<div class="main layout flex">
-		<viewbar />
 		<div ref="layout" class="nv-layout" v-show="mode === Modes.NOTES">
+			<viewbar />
 			<note-overview />
 			<editor />
                 </div>
-		<project-overview v-show="mode === Modes.CATEGORIES" />
-		<note-overview v-show="mode === Modes.ARCHIVE" />
+		<div ref="layout" class="nv-layout" v-show="mode === Modes.CATEGORIES">
+			<viewbar />
+			<project-overview />
+                </div>
+		<div ref="layout" class="nv-layout" v-show="mode === Modes.ARCHIVE">
+			<viewbar />
+			<note-overview />
+                </div>
 	</div>
 </template>
 
@@ -182,6 +188,6 @@
 
 <style lang="scss">
 	.nv-layout {
-		width: calc(100vw - 52px);
+		width: 100vw;
 	}
 </style>
