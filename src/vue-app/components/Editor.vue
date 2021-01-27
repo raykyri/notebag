@@ -311,12 +311,13 @@
 <style lang="scss">
 	.editing-area {
 		width: 100%;
-		padding: 0.2rem 1.2rem 0rem;
+		padding: 0.2rem 0.66rem;
 		position: relative;
 		font-size: var(--font-size);
+		border-top: 1px solid var(--muted);
 	}
 	.editing-container {
-		max-height: calc(100vh - 18.4rem);
+		max-height: calc(100vh - 22rem);
 		overflow-y: auto;
 		padding-top: 0.8rem;
 	}
