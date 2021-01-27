@@ -43,7 +43,7 @@ async function toggleWindow() {
 async function createWindow () {
 	const queryString = await getLocalLicenseInformation();
 	const windowUrl = process.env.NODE_ENV === "development"
-		? `http://localhost:8080/index.html${queryString}`
+		? `http://localhost:8000/index.html${queryString}`
 		: `file://${path.resolve(__dirname, "..", "vue-app")}/index.html${queryString}`;
 
 	global.mainWindow = new BrowserWindow({

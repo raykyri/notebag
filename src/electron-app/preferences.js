@@ -8,7 +8,7 @@ global.preferencesWindow = undefined;
 async function createPreferencesWindow() {
 	const queryString = await getLocalLicenseInformation();
 	const windowUrl = process.env.NODE_ENV === "development"
-		? `http://localhost:8080/index.html${queryString}#/preferences`
+		? `http://localhost:8000/index.html${queryString}#/preferences`
 		: `file://${path.resolve(__dirname, "..", "vue-app")}/index.html${queryString}#/preferences`;
 
 	if (global.preferencesWindow) {
@@ -63,5 +63,3 @@ async function createPreferencesWindow() {
 module.exports = {
 	createPreferencesWindow,
 };
-
-

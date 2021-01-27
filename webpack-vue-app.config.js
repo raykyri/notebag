@@ -21,6 +21,7 @@ module.exports = {
 		__dirname: true
 	},
 	devServer: {
+		port: 8000,
 		historyApiFallback: true,
 		overlay: {
 			errors: true,
