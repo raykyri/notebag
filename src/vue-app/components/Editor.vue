@@ -136,8 +136,8 @@
 			suppressEnter(e) {
 				if (e.keyCode === 13) { e.preventDefault(); }
 			},
-			setNoteTitle: debounce(setNoteTitle, 250),
-			updateNote: asyncDebounce(updateNote, 250),
+			setNoteTitle: debounce(setNoteTitle, 1000),
+			updateNote: asyncDebounce(updateNote, 1000),
 			reloadEditor() {
 				this.editor.destroy();
 				this.editor = makeEditor(this.activeNote, this.updateNote, NoteSuggestions(this));
@@ -149,10 +149,8 @@
 				});
 			},
 			onActiveNoteChanged(activeNote) {
-				this.$nextTick(() => {
-					this.editor.setContent(activeNote.body);
-					this.setEditorFocus();
-				});
+				this.editor.setContent(activeNote.body);
+				this.setEditorFocus();
 			},
 			refocusSelection(event) {
 				if (event.target == document.body) {
