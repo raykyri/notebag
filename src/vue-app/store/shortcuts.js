@@ -16,7 +16,7 @@ const defaultShortcuts = {
 	darwin: {
 		[Shortcuts.SHOW_HIDE_WINDOW]: [17, 18, 32],
 		[Shortcuts.NEW_NOTE]: [91, 78],
-		[Shortcuts.DELETE_NOTE]: [91, 68],
+		[Shortcuts.DELETE_NOTE]: [91, 8],
 		[Shortcuts.GO_UP_NOTE]: [91, 75],
 		[Shortcuts.GO_DOWN_NOTE]: [91, 74],
 		[Shortcuts.FOCUS_SEARCH]: [91, 76],
@@ -28,7 +28,7 @@ const defaultShortcuts = {
 	other: {
 		[Shortcuts.SHOW_HIDE_WINDOW]: [17, 18, 32],
 		[Shortcuts.NEW_NOTE]: [17, 78],
-		[Shortcuts.DELETE_NOTE]: [17, 68],
+		[Shortcuts.DELETE_NOTE]: [17, 8],
 		[Shortcuts.GO_UP_NOTE]: [17, 75],
 		[Shortcuts.GO_DOWN_NOTE]: [17, 74],
 		[Shortcuts.FOCUS_SEARCH]: [17, 76],
