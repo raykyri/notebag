@@ -207,8 +207,10 @@ export default new Vuex.Store({
 
 			state.activeNote = id;
 
-			electronStore.set(ACTIVE_NOTE, id);
-			noteStorage.set(NOTES, state.notes);
+			setTimeout(() => {
+				electronStore.set(ACTIVE_NOTE, id);
+				noteStorage.set(NOTES, state.notes);
+			}, 0);
 
 			EventBus.$emit(Events.ACTIVE_NOTE_CHANGED, state.notes[id]);
 			EventBus.$trigger(Events.MODE_SWITCHED, "editor");
